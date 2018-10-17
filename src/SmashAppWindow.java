@@ -11,7 +11,11 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.Color;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 public class SmashAppWindow {
@@ -37,6 +41,11 @@ public class SmashAppWindow {
 		frmWelcomeToSmash.setBounds(100, 100, 1030, 649);
 		frmWelcomeToSmash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWelcomeToSmash.getContentPane().setLayout(null);
+		
+		JLabel label = new JLabel(new ImageIcon(".\\images\\SmashBrosSymbol.jpg"));
+		label.setSize(983, 230);
+		label.setLocation(10, 94);
+		frmWelcomeToSmash.getContentPane().add(label);
 		
 		JLabel lblSmashTracker = new JLabel("SMASH TRACKER");
 		lblSmashTracker.setForeground(new Color(65, 105, 225));

@@ -24,6 +24,8 @@ public class MainAppFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtPlayer1;
 	private JTextField txtPlayer2;
+	JComboBox<String> comboBox_char1 = new JComboBox<String>();
+	JComboBox<String> comboBox_char2 = new JComboBox<String>();
 
 
 	/**
@@ -271,10 +273,10 @@ public class MainAppFrame extends JFrame {
 									comboBox_char1.addItem(res.getString("name"));
 								}
 							}
-						}
-						//P2
-						res = smashDB.displayCharactersByPlayer();
-						if(!(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
+						}else 
+							//P2	
+							if(!(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
+							res = smashDB.displayCharactersByPlayer();
 							comboBox_char2.removeAllItems();
 							while(res.next()){
 								if(res.getString("tag").equals(txtPlayer2.getText())){
@@ -282,6 +284,31 @@ public class MainAppFrame extends JFrame {
 								}
 							}
 						}
+						
+						//Update characters in case any were added
+						if((lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2)).equals(txtPlayer1.getText())){
+							res = smashDB.displayCharactersByPlayer();
+							Object selCom = comboBox_char1.getSelectedItem();
+							comboBox_char1.removeAllItems();
+							while(res.next()){
+								if(res.getString("tag").equals(txtPlayer1.getText())){
+									comboBox_char1.addItem(res.getString("name"));
+								}
+							}
+							comboBox_char1.setSelectedItem(selCom);
+						}
+						if((lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
+							res = smashDB.displayCharactersByPlayer();
+							Object selCom = comboBox_char2.getSelectedItem();
+								comboBox_char2.removeAllItems();
+								while(res.next()){
+									if(res.getString("tag").equals(txtPlayer2.getText())){
+										comboBox_char2.addItem(res.getString("name"));
+									}
+								}
+							comboBox_char2.setSelectedItem(selCom);
+						}
+						
 						//Change tag and character labels
 						lblP1VSP2.setText(txtPlayer1.getText() + " VS " + txtPlayer2.getText());
 						lblPlayer1.setText(txtPlayer1.getText() + "'s");
@@ -316,8 +343,8 @@ public class MainAppFrame extends JFrame {
 						try {
 							AddTagWindow window = new AddTagWindow();
 							window.NewTagFrame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
+						} catch (Exception ex) {
+							ex.printStackTrace();
 						}
 					}
 				});
@@ -344,4 +371,5 @@ public class MainAppFrame extends JFrame {
 		});
 
 	}
+	
 }

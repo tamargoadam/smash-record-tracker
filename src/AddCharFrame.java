@@ -127,7 +127,9 @@ public class AddCharFrame extends JFrame {
 					
 					rs = smashDB.displayCharactersByPlayer();
 					while(rs.next()){
-						if(rs.getString("name").equals(comboBox_char.getSelectedItem())) charExists = true;
+						if(rs.getString("tag").equals(tagText)){
+							if(rs.getString("name").equals(comboBox_char.getSelectedItem())) charExists = true;
+						}
 					}
 					
 				}catch (SQLException e) {
