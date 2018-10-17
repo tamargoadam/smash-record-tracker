@@ -261,15 +261,18 @@ public class MainAppFrame extends JFrame {
 				}else{
 					
 					lblPlayerNotFound.setText("");
-					//TODO change data here
 					try {
 						//Change combo boxes to match player if needed
 						//P1
 						ResultSet res = smashDB.displayCharactersByPlayer();
 						if(!(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2)).equals(txtPlayer1.getText())){
 							comboBox_char1.removeAllItems();
+							//Make main top option
+							String main = smashDB.findMain(txtPlayer1.getText());
+							comboBox_char1.addItem(main);
+							
 							while(res.next()){
-								if(res.getString("tag").equals(txtPlayer1.getText())){
+								if(res.getString("tag").equals(txtPlayer1.getText()) && !res.getString("name").equals(main)){
 									comboBox_char1.addItem(res.getString("name"));
 								}
 							}
@@ -278,8 +281,12 @@ public class MainAppFrame extends JFrame {
 							if(!(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
 							res = smashDB.displayCharactersByPlayer();
 							comboBox_char2.removeAllItems();
+							//Make main top option
+							String main = smashDB.findMain(txtPlayer2.getText());
+							comboBox_char2.addItem(main);
+							
 							while(res.next()){
-								if(res.getString("tag").equals(txtPlayer2.getText())){
+								if(res.getString("tag").equals(txtPlayer2.getText()) && !res.getString("name").equals(main)){
 									comboBox_char2.addItem(res.getString("name"));
 								}
 							}
