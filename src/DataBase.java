@@ -373,6 +373,34 @@ public class DataBase {
 		
 	}
 	
+	public void changeMain(String newMain){
+		
+		try {
+			
+			if(con == null)
+			getConnection();
+			
+			PreparedStatement ps = con.prepareStatement("UPDATE character SET is_main = ?"
+					+ "WHERE tag = ? AND name = ?;");
+			ps.setBoolean(1, false);
+			ps.setString(2, SmashAppWindow.user);
+			ps.setString(3, findMain(SmashAppWindow.user));
+			ps.executeUpdate();
+			
+			ps = con.prepareStatement("UPDATE character SET is_main = ?"
+					+ "WHERE tag = ? AND name = ?;");
+			ps.setBoolean(1, true);
+			ps.setString(2, SmashAppWindow.user);
+			ps.setString(3, newMain);
+			ps.executeUpdate();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void dropPlayerTable() {
 	
 		try {

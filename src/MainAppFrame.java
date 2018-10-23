@@ -47,6 +47,7 @@ public class MainAppFrame extends JFrame {
 		JMenuItem viewStatsItem;
 		JMenuItem changeMainItem;
 		
+		
 		menubar = new JMenuBar();
 		//Add options menu
 		optionsMenu = new JMenu("Options");
@@ -93,10 +94,20 @@ public class MainAppFrame extends JFrame {
 		viewStatsItem.addActionListener(null);
 		optionsMenu.add(viewStatsItem);
 		
-		changeMainItem = new JMenuItem("Change Main");
+		changeMainItem = new JMenuItem("Change Your Main");
 		changeMainItem.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            System.exit(0);
+	            //Send to change main window
+	        	EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ChangeMainWindow window = new ChangeMainWindow();
+							window.setVisible(true);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
 	        }
 	    });
 		optionsMenu.add(changeMainItem);
