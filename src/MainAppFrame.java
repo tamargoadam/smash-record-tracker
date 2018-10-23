@@ -180,10 +180,15 @@ public class MainAppFrame extends JFrame {
 		comboBox_char1.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		comboBox_char1.setBounds(15, 156, 245, 38);
 		contentPane.add(comboBox_char1);
+		//Make main default
+		comboBox_char1.addItem(smashDB.findMain(player1));
+		//Fill with other chars
 		rs = smashDB.displayCharactersByPlayer();
 		try {
 			while(rs.next()){
-				if(rs.getString("tag").equals(player1)) comboBox_char1.addItem(rs.getString("name"));
+				if(rs.getString("tag").equals(player1) && !rs.getString("name").equals(smashDB.findMain(player1))) {
+					comboBox_char1.addItem(rs.getString("name"));
+				}
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -194,10 +199,15 @@ public class MainAppFrame extends JFrame {
 		comboBox_char2.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		comboBox_char2.setBounds(398, 156, 245, 38);
 		contentPane.add(comboBox_char2);
+		//Make main default
+		comboBox_char2.addItem(smashDB.findMain(player2));
+		//Fill with other chars
 		rs = smashDB.displayCharactersByPlayer();
 		try {
 			while(rs.next()){
-				if(rs.getString("tag").equals(player2)) comboBox_char2.addItem(rs.getString("name"));
+				if(rs.getString("tag").equals(player2) && !rs.getString("name").equals(smashDB.findMain(player2))) {
+					comboBox_char2.addItem(rs.getString("name"));
+				}
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
