@@ -22,7 +22,7 @@ public class DataBase {
 			if(!res.next()){
 				System.out.println("Building player table...");
 				Statement state2 = con.createStatement();
-				state2.execute("CREATE TABLE player(tag TEXT, wins INTEGER, losses INTEGER, PRIMARY KEY(tag));");
+				state2.execute("CREATE TABLE player(tag TEXT, first TEXT, last TEXT, PRIMARY KEY(tag));");
 			}
 			
 			//Check that character table exists
@@ -56,7 +56,7 @@ public class DataBase {
 		initialize();
 	}
 	
-	public void addPlayer(String tag){
+	public void addPlayer(String tag, String fName, String lName){
 		
 		try{
 			if(con == null) getConnection();
@@ -64,8 +64,8 @@ public class DataBase {
 			//add player with tag info
 			PreparedStatement prep = con.prepareStatement("INSERT INTO player values(?,?,?);");
 			prep.setString(1, tag);
-			prep.setInt(2, 0);
-			prep.setInt(3, 0);
+			prep.setString(2, fName);
+			prep.setString(3, lName);
 			prep.execute();
 		}catch (ClassNotFoundException e){
 			e.printStackTrace();
@@ -177,7 +177,8 @@ public class DataBase {
 			if(con == null) getConnection();
 			
 			Statement state = con.createStatement();
-			res = state.executeQuery("SELECT character.name, player.tag FROM character LEFT JOIN player ON player.tag = character.tag;");
+			res = state.executeQuery("SELECT character.name, player.tag "
+					+ "FROM character, player WHERE player.tag = character.tag;");
 			return res;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -318,12 +319,6 @@ public class DataBase {
 				ps.setString(3, looser);
 				ps.setString(4, lChar);
 				ps.executeUpdate();
-				
-				//Update player's wins
-				PreparedStatement ps1 = con.prepareStatement("UPDATE player SET wins = wins + 1 "
-						+ "WHERE tag = ?");
-				ps1.setString(1, winner);
-				ps1.execute();
 			}
 			if(recordExists(looser, lChar, winner, wChar)){
 				//Update record
@@ -334,12 +329,6 @@ public class DataBase {
 				ps.setString(3, winner);
 				ps.setString(4, wChar);
 				ps.executeUpdate();
-				
-				//Update player's losses
-				PreparedStatement ps1 = con.prepareStatement("UPDATE player SET losses = losses + 1 "
-						+ "WHERE tag = ?");
-				ps1.setString(1, looser);
-				ps1.execute();
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -365,12 +354,6 @@ public class DataBase {
 				ps.setString(3, looser);
 				ps.setString(4, lChar);
 				ps.executeUpdate();
-				
-				//Update player's wins
-				PreparedStatement ps1 = con.prepareStatement("UPDATE player SET wins = wins - 1 "
-						+ "WHERE tag = ?");
-				ps1.setString(1, winner);
-				ps1.execute();
 			}
 			if(recordExists(looser, lChar, winner, wChar) && getWins(winner, wChar, looser, lChar) > 0){
 				//Update record
@@ -381,12 +364,6 @@ public class DataBase {
 				ps.setString(3, winner);
 				ps.setString(4, wChar);
 				ps.executeUpdate();
-				
-				//Update player's losses
-				PreparedStatement ps1 = con.prepareStatement("UPDATE player SET losses = losses - 1 "
-						+ "WHERE tag = ?");
-				ps1.setString(1, looser);
-				ps1.execute();
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

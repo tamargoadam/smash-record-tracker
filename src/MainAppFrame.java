@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -27,7 +30,6 @@ public class MainAppFrame extends JFrame {
 	JComboBox<String> comboBox_char1 = new JComboBox<String>();
 	JComboBox<String> comboBox_char2 = new JComboBox<String>();
 
-
 	/**
 	 * Create the frame.
 	 */
@@ -38,15 +40,83 @@ public class MainAppFrame extends JFrame {
 		String character1 = "";
 		String character2 = "";
 		
+		JMenuBar menubar;
+		JMenu optionsMenu;
+		JMenuItem addCharacterItem;
+		JMenuItem addTagItem;
+		JMenuItem viewStatsItem;
+		JMenuItem changeMainItem;
+		
+		menubar = new JMenuBar();
+		//Add options menu
+		optionsMenu = new JMenu("Options");
+		menubar.add(optionsMenu);
+		
+		//Add items to options menu
+		addCharacterItem = new JMenuItem("Add Character");
+		addCharacterItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Send to add character page
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							AddCharFrame window = new AddCharFrame();
+							window.NewCharFrame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		optionsMenu.add(addCharacterItem);
+		
+		addTagItem = new JMenuItem("Add Tag");
+		addTagItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Send to create tag page
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							AddTagWindow window = new AddTagWindow();
+							window.NewTagFrame.setVisible(true);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		optionsMenu.add(addTagItem);
+		
+		viewStatsItem = new JMenuItem("View Player Statistics");
+		viewStatsItem.addActionListener(null);
+		optionsMenu.add(viewStatsItem);
+		
+		changeMainItem = new JMenuItem("Change Main");
+		changeMainItem.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            System.exit(0);
+	        }
+	    });
+		optionsMenu.add(changeMainItem);
+		
+		this.setJMenuBar(menubar);
+		
 		ResultSet rs;
 		try {
 			//set starting players and characters 
+			//player1 = user when initialized
 			rs = smashDB.displayPlayers();
-			rs.next();
-			player1 = rs.getString("tag");
+			player1 = SmashAppWindow.user;
 			character1 = smashDB.findMain(player1);
 			rs.next();
-			player2 = rs.getString("tag");
+			if(!rs.getString("tag").equals(player1)){
+				player2 = rs.getString("tag");
+			}else{
+				rs.next();
+				player2 = rs.getString("tag");
+			}
 			character2 = smashDB.findMain(player2);
 			
 		}catch (SQLException e) {
@@ -85,6 +155,7 @@ public class MainAppFrame extends JFrame {
 		txtPlayer2.setBounds(398, 102, 245, 38);
 		contentPane.add(txtPlayer2);
 		
+		//Error label
 		JLabel lblPlayerNotFound = new JLabel("");
 		lblPlayerNotFound.setFont(new Font("Tahoma", Font.ITALIC, 18));
 		String notFoundError = "At least one player was not found or both the players entered are the same.";
@@ -93,6 +164,7 @@ public class MainAppFrame extends JFrame {
 		lblPlayerNotFound.setBounds(15, 197, 628, 20);
 		contentPane.add(lblPlayerNotFound);
 		
+		//Player 1 character selection
 		JComboBox<String> comboBox_char1 = new JComboBox<String>();
 		comboBox_char1.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		comboBox_char1.setBounds(15, 156, 245, 38);
@@ -106,6 +178,7 @@ public class MainAppFrame extends JFrame {
 			e1.printStackTrace();
 		}
 		
+		//Player 2 character selection
 		JComboBox<String> comboBox_char2 = new JComboBox<String>();
 		comboBox_char2.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		comboBox_char2.setBounds(398, 156, 245, 38);
@@ -147,6 +220,7 @@ public class MainAppFrame extends JFrame {
 		lblCharacter2.setBounds(343, 289, 300, 55);
 		contentPane.add(lblCharacter2);
 		
+		//Holds record display
 		JPanel winPanel1 = new JPanel();
 		winPanel1.setBackground(new Color(176, 196, 222));
 		winPanel1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -154,9 +228,7 @@ public class MainAppFrame extends JFrame {
 		contentPane.add(winPanel1);
 		winPanel1.setLayout(null);
 		
-		JLabel lblNumWins1 = new JLabel(""+ smashDB.getWins(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-				lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-				lblCharacter2.getText()));
+		JLabel lblNumWins1 = new JLabel(""+ smashDB.getWins(player1, lblCharacter1.getText(), player2, lblCharacter2.getText()));
 		lblNumWins1.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 55));
 		lblNumWins1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumWins1.setBounds(0, 0, 290, 245);
@@ -170,13 +242,11 @@ public class MainAppFrame extends JFrame {
 		winPanel1.add(btnAddWin1);
 		btnAddWin1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO add 1 to wins in DB and load lblNumWins
-				smashDB.addWin(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-						lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-						lblCharacter2.getText());
-				lblNumWins1.setText(""+ smashDB.getWins(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-						lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-						lblCharacter2.getText()));
+				//Add 1 to wins in DB and load lblNumWins
+				String player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+				String player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+				smashDB.addWin(player1, lblCharacter1.getText(), player2, lblCharacter2.getText());
+				lblNumWins1.setText(""+ smashDB.getWins(player1, lblCharacter1.getText(), player2, lblCharacter2.getText()));
 			}
 		});
 		
@@ -188,13 +258,11 @@ public class MainAppFrame extends JFrame {
 		winPanel1.add(btnSubtractWin1);
 		btnSubtractWin1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//Subtract 1 to wins in DB and load lblNumWins
-				smashDB.subtractWin(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-						lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-						lblCharacter2.getText());
-				lblNumWins1.setText(""+ smashDB.getWins(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-						lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-						lblCharacter2.getText()));
+				//Subtract 1 from wins in DB and load lblNumWins
+				String player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+				String player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+				smashDB.subtractWin(player1, lblCharacter1.getText(), player2, lblCharacter2.getText());
+				lblNumWins1.setText(""+ smashDB.getWins(player1, lblCharacter1.getText(), player2, lblCharacter2.getText()));
 			}
 		});
 		
@@ -205,9 +273,7 @@ public class MainAppFrame extends JFrame {
 		contentPane.add(winPanel2);
 		winPanel2.setLayout(null);
 		
-		JLabel lblNumWins2 = new JLabel(""+ smashDB.getWins(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-				lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-				lblCharacter1.getText()));
+		JLabel lblNumWins2 = new JLabel(""+ smashDB.getWins(player2, lblCharacter2.getText(), player1, lblCharacter1.getText()));
 		lblNumWins2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumWins2.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 55));
 		lblNumWins2.setBounds(0, 0, 290, 245);
@@ -222,12 +288,10 @@ public class MainAppFrame extends JFrame {
 		btnAddWin2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Add 1 to wins in DB and load lblNumWins
-				smashDB.addWin(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-						lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-						lblCharacter1.getText());
-				lblNumWins2.setText(""+ smashDB.getWins(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-						lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-						lblCharacter1.getText()));
+				String player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+				String player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+				smashDB.addWin(player2, lblCharacter2.getText(), player1, lblCharacter1.getText());
+				lblNumWins2.setText(""+ smashDB.getWins(player2, lblCharacter2.getText(), player1, lblCharacter1.getText()));
 			}
 		});
 		
@@ -239,13 +303,11 @@ public class MainAppFrame extends JFrame {
 		winPanel2.add(btnSubtractWin2);
 		btnSubtractWin2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//Subtract 1 to wins in DB and load lblNumWins
-				smashDB.subtractWin(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-						lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-						lblCharacter1.getText());
-				lblNumWins2.setText(""+ smashDB.getWins(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-						lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-						lblCharacter1.getText()));
+				//Subtract 1 from wins in DB and load lblNumWins
+				String player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+				String player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+				smashDB.subtractWin(player2, lblCharacter2.getText(), player1, lblCharacter1.getText());
+				lblNumWins2.setText(""+ smashDB.getWins(player2, lblCharacter2.getText(), player1, lblCharacter1.getText()));
 			}
 		});
 		
@@ -254,6 +316,9 @@ public class MainAppFrame extends JFrame {
 		contentPane.add(btnLoadData);
 		btnLoadData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
+				String player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+				String player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+				
 				//if tag is not found print error else change data
 				if(!smashDB.playerExists(txtPlayer1.getText()) || !smashDB.playerExists(txtPlayer2.getText())
 						|| txtPlayer1.getText().equals(txtPlayer2.getText())){
@@ -265,7 +330,7 @@ public class MainAppFrame extends JFrame {
 						//Change combo boxes to match player if needed
 						//P1
 						ResultSet res = smashDB.displayCharactersByPlayer();
-						if(!(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2)).equals(txtPlayer1.getText())){
+						if(!(player1).equals(txtPlayer1.getText())){
 							comboBox_char1.removeAllItems();
 							//Make main top option
 							String main = smashDB.findMain(txtPlayer1.getText());
@@ -278,7 +343,7 @@ public class MainAppFrame extends JFrame {
 							}
 						}else 
 							//P2	
-							if(!(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
+							if(!(player2).equals(txtPlayer2.getText())){
 							res = smashDB.displayCharactersByPlayer();
 							comboBox_char2.removeAllItems();
 							//Make main top option
@@ -293,7 +358,7 @@ public class MainAppFrame extends JFrame {
 						}
 						
 						//Update characters in case any were added
-						if((lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2)).equals(txtPlayer1.getText())){
+						if((player1).equals(txtPlayer1.getText())){
 							res = smashDB.displayCharactersByPlayer();
 							Object selCom = comboBox_char1.getSelectedItem();
 							comboBox_char1.removeAllItems();
@@ -304,7 +369,7 @@ public class MainAppFrame extends JFrame {
 							}
 							comboBox_char1.setSelectedItem(selCom);
 						}
-						if((lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2)).equals(txtPlayer2.getText())){
+						if((player2).equals(txtPlayer2.getText())){
 							res = smashDB.displayCharactersByPlayer();
 							Object selCom = comboBox_char2.getSelectedItem();
 								comboBox_char2.removeAllItems();
@@ -324,12 +389,10 @@ public class MainAppFrame extends JFrame {
 						lblCharacter2.setText((String) comboBox_char2.getSelectedItem());
 						
 						//Change num wins labels
-						lblNumWins1.setText(""+ smashDB.getWins(lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2), 
-								lblCharacter1.getText(), lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2),
-								lblCharacter2.getText()));
-						lblNumWins2.setText(""+ smashDB.getWins(lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2), 
-								lblCharacter2.getText(), lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2),
-								lblCharacter1.getText()));
+						player1 = lblPlayer1.getText().substring(0, lblPlayer1.getText().length() - 2);
+						player2 = lblPlayer2.getText().substring(0, lblPlayer2.getText().length() - 2);
+						lblNumWins1.setText(""+ smashDB.getWins(player1, lblCharacter1.getText(), player2, lblCharacter2.getText()));
+						lblNumWins2.setText(""+ smashDB.getWins(player2, lblCharacter2.getText(), player1, lblCharacter1.getText()));
 						
 					} catch (SQLException e1) {
 						e1.printStackTrace();
@@ -378,5 +441,5 @@ public class MainAppFrame extends JFrame {
 		});
 
 	}
-	
+
 }

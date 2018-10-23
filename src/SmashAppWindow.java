@@ -22,6 +22,7 @@ public class SmashAppWindow {
 
 	JFrame frmWelcomeToSmash;
 	private JTextField textFldTag;
+	public static String user;
 	
 	DataBase smashDB = new DataBase();
 
@@ -87,6 +88,7 @@ public class SmashAppWindow {
 					lblTagNotFound.setText("There must be two or more players in the database to log in. Please add an account.");
 				}else{
 					//Send to main app window here
+					user = textFldTag.getText();
 					frmWelcomeToSmash.dispose();
 					MainAppFrame appFrame = new MainAppFrame();
 					appFrame.setVisible(true);

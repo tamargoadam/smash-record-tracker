@@ -18,6 +18,8 @@ public class AddTagWindow {
 	
 	JFrame NewTagFrame;
 	private JTextField text_tag;
+	private JTextField text_lname;
+	private JTextField text_fname;
 
 
 	/**
@@ -50,12 +52,12 @@ public class AddTagWindow {
 		lblTag.setBackground(Color.WHITE);
 		lblTag.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTag.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblTag.setBounds(75, 116, 175, 40);
+		lblTag.setBounds(75, 175, 175, 40);
 		NewTagFrame.getContentPane().add(lblTag);
 		
 		text_tag = new JTextField();
 		text_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		text_tag.setBounds(265, 120, 180, 30);
+		text_tag.setBounds(265, 179, 180, 30);
 		NewTagFrame.getContentPane().add(text_tag);
 		text_tag.setColumns(10);
 		
@@ -90,11 +92,39 @@ public class AddTagWindow {
 		comboBox_main.addItem("Kirby");
 		NewTagFrame.getContentPane().add(comboBox_main);
 		
+		JLabel lblLName = new JLabel("Enter Last Name : ");
+		lblLName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblLName.setForeground(new Color(65, 105, 225));
+		lblLName.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblLName.setBackground(Color.WHITE);
+		lblLName.setBounds(75, 119, 175, 40);
+		NewTagFrame.getContentPane().add(lblLName);
+		
+		JLabel lblFName = new JLabel("Enter First Name : ");
+		lblFName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblFName.setForeground(new Color(65, 105, 225));
+		lblFName.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblFName.setBackground(Color.WHITE);
+		lblFName.setBounds(75, 63, 175, 40);
+		NewTagFrame.getContentPane().add(lblFName);
+		
+		text_lname = new JTextField();
+		text_lname.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		text_lname.setColumns(10);
+		text_lname.setBounds(265, 127, 180, 30);
+		NewTagFrame.getContentPane().add(text_lname);
+		
+		text_fname = new JTextField();
+		text_fname.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		text_fname.setColumns(10);
+		text_fname.setBounds(265, 71, 180, 30);
+		NewTagFrame.getContentPane().add(text_fname);
+		
 		JLabel lblTagError = new JLabel("");
 		lblTagError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTagError.setFont(new Font("Tahoma", Font.ITALIC, 18));
 		lblTagError.setForeground(Color.RED);
-		lblTagError.setBounds(15, 172, 548, 20);
+		lblTagError.setBounds(15, 296, 548, 20);
 		NewTagFrame.getContentPane().add(lblTagError);
 		
 		JButton btnCreateTag = new JButton("Create");
@@ -103,6 +133,8 @@ public class AddTagWindow {
 				
 				Boolean tagExists = false;
 				String tagText = text_tag.getText();
+				String fNameText = text_fname.getText();
+				String lNameText = text_lname.getText();
 				ResultSet rs = smashDB.displayPlayers();
 				try {
 					while(rs.next()){
@@ -114,7 +146,7 @@ public class AddTagWindow {
 				
 				if(tagText != "" && !tagExists){
 					
-					smashDB.addPlayer(tagText);
+					smashDB.addPlayer(tagText, fNameText, lNameText);
 					smashDB.addCharacter(tagText, (String) comboBox_main.getSelectedItem(), true);
 					
 					NewTagFrame.dispose();

@@ -65,6 +65,7 @@ public class AddCharFrame extends JFrame {
 		NewCharFrame.getContentPane().add(lblTag);
 		
 		text_tag = new JTextField();
+		text_tag.setText(SmashAppWindow.user);
 		text_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		text_tag.setBounds(265, 120, 180, 30);
 		NewCharFrame.getContentPane().add(text_tag);
