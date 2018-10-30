@@ -145,7 +145,7 @@ public class MainAppFrame extends JFrame {
 		
 		JLabel lblP1VSP2 = new JLabel(player1 + " VS " + player2);
 		lblP1VSP2.setForeground(new Color(65, 105, 225));
-		lblP1VSP2.setFont(new Font("Segoe UI", Font.BOLD, 28));
+		lblP1VSP2.setFont(new Font("Segoe UI Black", Font.BOLD, 28));
 		lblP1VSP2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblP1VSP2.setBounds(15, 16, 628, 70);
 		contentPane.add(lblP1VSP2);
