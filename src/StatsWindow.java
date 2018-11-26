@@ -198,6 +198,7 @@ public class StatsWindow extends JFrame {
 		JButton btnLoadStats = new JButton("Load Statistics");
 		btnLoadStats.setBounds(239, 550, 160, 50);
 		contentPane.add(btnLoadStats);
+		
 		btnLoadStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				//Reload total wins/losses
