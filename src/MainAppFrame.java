@@ -91,7 +91,21 @@ public class MainAppFrame extends JFrame {
 		optionsMenu.add(addTagItem);
 		
 		viewStatsItem = new JMenuItem("View Player Statistics");
-		viewStatsItem.addActionListener(null);
+		viewStatsItem.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            //Send to change main window
+	        	EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							StatsWindow window = new StatsWindow();
+							window.setVisible(true);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+	        }
+	    });
 		optionsMenu.add(viewStatsItem);
 		
 		changeMainItem = new JMenuItem("Change Your Main");

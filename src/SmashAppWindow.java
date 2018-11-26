@@ -43,10 +43,10 @@ public class SmashAppWindow {
 		frmWelcomeToSmash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWelcomeToSmash.getContentPane().setLayout(null);
 		
-		JLabel label = new JLabel(new ImageIcon(".\\images\\SmashBrosSymbol.jpg"));
-		label.setSize(983, 230);
-		label.setLocation(10, 94);
-		frmWelcomeToSmash.getContentPane().add(label);
+		JLabel lblMeleeBanner = new JLabel(new ImageIcon(".\\images\\SmashBrosSymbol.jpg"));
+		lblMeleeBanner.setSize(983, 230);
+		lblMeleeBanner.setLocation(10, 94);
+		frmWelcomeToSmash.getContentPane().add(lblMeleeBanner);
 		
 		JLabel lblSmashTracker = new JLabel("SMASH TRACKER");
 		lblSmashTracker.setForeground(new Color(65, 105, 225));

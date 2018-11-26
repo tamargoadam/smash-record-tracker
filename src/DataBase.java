@@ -157,7 +157,7 @@ public class DataBase {
 			if(con == null) getConnection();
 			
 			Statement state = con.createStatement();
-			res = state.executeQuery("SELECT name FROM character;");
+			res = state.executeQuery("SELECT DISTINCT name FROM character;");
 			return res;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -399,6 +399,143 @@ public class DataBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int totalWins(String user){	
+		//use displayRecord to find number of wins
+		int wins = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+			
+				if(rs.getString("tag1").equals(user)){
+					wins += rs.getInt("wins");
+				}
+				if(rs.getString("tag2").equals(user)){
+					wins += rs.getInt("losses");
+				}
+			
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return wins;
+	}
+	
+	
+	public int totalLosses(String user){
+		//use displayRecord to find number of losses
+		int losses = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+				
+				if(rs.getString("tag1").equals(user)){
+					losses += rs.getInt("losses");
+				}
+				if(rs.getString("tag2").equals(user)){
+					losses += rs.getInt("wins");
+				}
+			
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return losses;
+	}
+	
+	public int PlayerWins(String user, String opponent){	
+		//use displayRecord to find number of wins against specific player
+		int wins = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+			
+				if(rs.getString("tag1").equals(user) && rs.getString("tag2").equals(opponent)){
+					wins += rs.getInt("wins");
+				}
+				if(rs.getString("tag2").equals(user) && rs.getString("tag1").equals(opponent)){
+					wins += rs.getInt("losses");
+				}
+			
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return wins;
+	}
+	
+	public int PlayerLosses(String user, String opponent){	
+		//use displayRecord to find number of losses against specific player
+		int losses = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+				
+				if(rs.getString("tag1").equals(user) && rs.getString("tag2").equals(opponent)){
+					losses += rs.getInt("losses");
+				}
+				if(rs.getString("tag2").equals(user) && rs.getString("tag1").equals(opponent)){
+					losses += rs.getInt("wins");
+				}
+				
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return losses;
+	}
+	
+	public int CharVSCharWins(String user, String userChar, String opponentChar){	
+		//use displayRecord to find number of wins for specific character match up
+		int wins = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+			
+				if(rs.getString("tag1").equals(user) && rs.getString("name1").equals(userChar)
+						&& rs.getString("name2").equals(opponentChar)){
+					wins += rs.getInt("wins");
+				}
+				if(rs.getString("tag2").equals(user) && rs.getString("name2").equals(userChar)
+						&& rs.getString("name1").equals(opponentChar)){
+					wins += rs.getInt("losses");
+				}
+			
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return wins;
+	}
+	
+	public int CharVSCharLosses(String user, String userChar, String opponentChar){	
+		//use displayRecord to find number of wins for specific character match up
+		int losses = 0;
+		ResultSet rs = displayRecord();
+		try{
+			while(rs.next()){
+			
+				if(rs.getString("tag1").equals(user) && rs.getString("name1").equals(userChar)
+						&& rs.getString("name2").equals(opponentChar)){
+					losses += rs.getInt("losses");
+				}
+				if(rs.getString("tag2").equals(user) && rs.getString("name2").equals(userChar)
+						&& rs.getString("name1").equals(opponentChar)){
+					losses += rs.getInt("wins");
+				}
+			
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return losses;
 	}
 	
 	public void dropPlayerTable() {
