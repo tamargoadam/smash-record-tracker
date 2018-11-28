@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!SmashRecordTracker.jar
 *.war
 *.nar
 *.ear
