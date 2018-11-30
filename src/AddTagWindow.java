@@ -144,14 +144,16 @@ public class AddTagWindow {
 					e.printStackTrace();
 				}
 				
-				if(tagText != "" && !tagExists){
-					
-					smashDB.addPlayer(tagText, fNameText, lNameText);
-					smashDB.addCharacter(tagText, (String) comboBox_main.getSelectedItem(), true);
-					
-					NewTagFrame.dispose();
+				if(!tagText.equals("") && !tagExists){
+					if(!fNameText.equals("") && !lNameText.equals("")){
+						smashDB.addPlayer(tagText, fNameText, lNameText);
+						smashDB.addCharacter(tagText, (String) comboBox_main.getSelectedItem(), true);
+						NewTagFrame.dispose();
+					}else{
+						lblTagError.setText("The name entered is invalid. Please try again.");
+					}
 				}else{
-					lblTagError.setText("The tag entered is invalid. Please try again.");
+					lblTagError.setText("The tag entered is invalid or already exists. Please try again.");
 				}
 			}
 		});

@@ -233,6 +233,7 @@ public class MainAppFrame extends JFrame {
 		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlayer1.setBounds(15, 246, 300, 55);
 		contentPane.add(lblPlayer1);
+		lblPlayer1.setToolTipText(smashDB.getPlayerName(player1));
 		
 		JLabel lblPlayer2 = new JLabel(player2 + "'s");
 		lblPlayer2.setForeground(new Color(65, 105, 225));
@@ -240,6 +241,7 @@ public class MainAppFrame extends JFrame {
 		lblPlayer2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlayer2.setBounds(343, 246, 300, 55);
 		contentPane.add(lblPlayer2);
+		lblPlayer2.setToolTipText(smashDB.getPlayerName(player2));
 		
 		JLabel lblCharacter1 = new JLabel(character1);
 		lblCharacter1.setForeground(new Color(65, 105, 225));
@@ -419,7 +421,9 @@ public class MainAppFrame extends JFrame {
 						//Change tag and character labels
 						lblP1VSP2.setText(txtPlayer1.getText() + " VS " + txtPlayer2.getText());
 						lblPlayer1.setText(txtPlayer1.getText() + "'s");
+						lblPlayer1.setToolTipText(smashDB.getPlayerName(txtPlayer1.getText()));
 						lblPlayer2.setText(txtPlayer2.getText() + "'s");
+						lblPlayer2.setToolTipText(smashDB.getPlayerName(txtPlayer2.getText()));
 						lblCharacter1.setText((String) comboBox_char1.getSelectedItem());
 						lblCharacter2.setText((String) comboBox_char2.getSelectedItem());
 						

@@ -116,6 +116,27 @@ public class DataBase {
 		
 	}
 	
+	public String getPlayerName(String tag){
+		
+		String name = "";
+		ResultSet res = null;
+		try{
+			if(con == null) getConnection();
+			
+			PreparedStatement prep = con.prepareStatement("SELECT first, last FROM player WHERE tag = ?;");
+			prep.setString(1, tag);
+			res = prep.executeQuery();
+			
+			name = res.getString("first") + " " + res.getString("last");
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return name;
+	}
+	
 	public ResultSet displayPlayers() {
 		
 		ResultSet res = null;
